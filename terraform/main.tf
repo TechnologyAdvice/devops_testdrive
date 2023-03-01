@@ -55,6 +55,7 @@ data "aws_iam_policy_document" "example_assume_role" {
   }
 }
 
+# Attach SSM role.
 resource "aws_iam_role_policy_attachment" "example_ssm_policy" {
   role       = aws_iam_role.example_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
