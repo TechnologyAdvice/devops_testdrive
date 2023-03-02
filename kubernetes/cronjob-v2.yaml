@@ -1,0 +1,14 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: "amazing-cron-job"
+spec:
+  schedule: '*/15 9-19 * *'
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          concurrencyPolicy: Forbid
+          successfulJobHistoryLimit: 1
+          failedJobsHistoryLimit: 1
