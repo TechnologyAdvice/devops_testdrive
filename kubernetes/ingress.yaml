@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Ingress
+metadata:
+  name: ingress-test
+spec:
+  rules:
+    - host: *
+    http:
+      paths:
+        - path: /endpoint
+          backend:
+            serviceName: s1
+            servicePort: 80

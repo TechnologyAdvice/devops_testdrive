@@ -1,0 +1,8 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: amazing-cron-job
+spec:
+  schedule: '*/1 * * * *'
+  startingDeadlineSeconds: 10
+  concurrencyPolicy: Allow
