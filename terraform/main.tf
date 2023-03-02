@@ -16,6 +16,7 @@ terraform {
   }
 }
 
+# comment
 locals {
   project = lower("example")
 }
