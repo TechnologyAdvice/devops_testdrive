@@ -68,7 +68,11 @@ resource "aws_iam_instance_profile" "example_profile" {
 
 resource "aws_instance" "web" {
   ami           = data.aws_ami.ubuntu.id
-  instance_type = "t2.macro"
+  #instance_type = "t2.macro"
+  instance_type = "t2.micro"
+  # Added below line
+  iam_instance_profile = aws_iam_instance_profile.example_profile.name
+
 
   root_block_device {
     volume_type           = "gp3"
@@ -84,5 +88,4 @@ resource "aws_instance" "web" {
   tags = {
     Name = "${local.project}"
   }
-
 }

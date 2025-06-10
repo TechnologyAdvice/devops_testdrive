@@ -6,3 +6,6 @@ spec:
   containers:
   - name: app
     image: images.ta.example/app:v4
+    ports:
+      - containerPort: 80
+  restartPolicy: Always
