@@ -5,12 +5,12 @@ on:
     paths:
       - 'terraform/**'
       - 'kubernetes/**'
-      - '.github/workflows/terraform.yml'
+      - '.github/workflows/pipeline.yml'
   pull_request:
     paths:
       - 'terraform/**'
       - 'kubernetes/**'
-      - '.github/workflows/terraform.yml'
+      - '.github/workflows/pipeline.yml'
 
 jobs:
   terraform:
