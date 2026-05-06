@@ -1,88 +1,80 @@
 terraform {
   required_version = ">= 1.0"
 
-  cloud {
-    organization = "Technology-Advice"
-
-    workspaces {
-      name = "DevOps-TerraformDrive"
-    }
-  }
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "4.32.0"
+      version = "~> 5.0"
     }
   }
+}
+
+provider "aws" {
+  region = "us-east-1"
 }
 
 locals {
-  project = lower("example")
+  ecr_name = "devops-testdrive-static-site"
 }
 
-data "aws_ami" "ubuntu" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-22.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-
-  owners = ["099720109477"]
+resource "aws_ecr_repository" "app" {
+  name = local.ecr_name
 }
 
-resource "aws_iam_role" "example_role" {
-  name               = local.project
-  assume_role_policy = data.aws_iam_policy_document.example_assume_role.json
+resource "aws_iam_openid_connect_provider" "github_actions" {
+  url = "https://token.actions.githubusercontent.com"
 
+  client_id_list = [
+    "sts.amazonaws.com",
+  ]
+
+  thumbprint_list = [
+    "6938fd4d98bab03faadb97b34396831e3780aea1",
+  ]
 }
 
-data "aws_iam_policy_document" "example_assume_role" {
+data "aws_iam_policy_document" "github_oidc_trust" {
   statement {
-    sid = ""
-    actions = [
-      "sts:AssumeRole",
-    ]
+    actions = ["sts:AssumeRoleWithWebIdentity"]
+
     principals {
-      type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
+      type        = "Federated"
+      identifiers = [aws_iam_openid_connect_provider.github_actions.arn]
+    }
+
+    condition {
+      test     = "StringLike"
+      variable = "token.actions.githubusercontent.com:sub"
+      values   = ["repo:*/*:*"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "token.actions.githubusercontent.com:aud"
+      values   = ["sts.amazonaws.com"]
     }
   }
 }
 
-# Attach SSM role.
-resource "aws_iam_role_policy_attachment" "example_ssm_policy" {
-  role       = aws_iam_role.example_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+resource "aws_iam_role" "github_actions_push" {
+  name               = "github-actions-${local.ecr_name}-push"
+  assume_role_policy = data.aws_iam_policy_document.github_oidc_trust.json
 }
 
-resource "aws_iam_instance_profile" "example_profile" {
-  name = local.project
-  role = aws_iam_role.example_role.name
+data "aws_iam_policy_document" "ecr_push_broad" {
+  statement {
+    sid = "ECR"
+
+    actions = [
+      "ecr:*",
+    ]
+
+    resources = ["*"]
+  }
 }
 
-resource "aws_instance" "web" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t2.macro"
-
-  root_block_device {
-    volume_type           = "gp3"
-    volume_size           = 20
-    delete_on_termination = true
-    encrypted             = true
-
-    tags = {
-      Name = "${local.project}-root-volume"
-    }
-  }
-
-  tags = {
-    Name = "${local.project}"
-  }
-
+resource "aws_iam_role_policy" "github_actions_push" {
+  name   = "ecr-push-all"
+  role   = aws_iam_role.github_actions_push.id
+  policy = data.aws_iam_policy_document.ecr_push_broad.json
 }

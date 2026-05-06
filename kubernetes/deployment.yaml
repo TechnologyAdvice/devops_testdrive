@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: static-site
+  labels:
+    app: devops-static-site
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devops-static-site
+  template:
+    metadata:
+      labels:
+        app: devops-static-site
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          ports:
+            - name: http
+              containerPort: 80

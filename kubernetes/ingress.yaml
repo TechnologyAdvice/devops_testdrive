@@ -1,13 +1,16 @@
-apiVersion: v1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-test
+  name: static-site
 spec:
   rules:
-    - host: *
-    http:
-      paths:
-        - path: /endpoint
-          backend:
-            serviceName: s1
-            servicePort: 80
+    - host: frontend.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: nginx-static-service
+                port:
+                  number: 80

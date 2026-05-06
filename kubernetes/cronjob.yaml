@@ -1,8 +1,19 @@
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: amazing-cron-job
+  name: static-site-maintenance
 spec:
-  schedule: '*/1 * * * *'
-  startingDeadlineSeconds: 10
+  schedule: "*/2 * * * *"
   concurrencyPolicy: Allow
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: curl
+              image: curlimages/curl:latest
+              command:
+                - /bin/sh
+                - -c
+                - echo maintenance tick
