@@ -1,6 +1,6 @@
 # DevOps — Test Drive Assignment
 
-You are inheriting a **small, intentionally flawed deployment repository** for a hypothetical **Nginx-based static site**. The codebase is meant to resemble something a team might ship quickly and refine later: plausible structure, realistic gaps, and tradeoffs that matter in production.
+You are inheriting a **small deployment repository** for a hypothetical **Nginx-based static site**. The codebase is meant to resemble something a team might ship quickly and refine later: plausible structure, gaps, and tradeoffs that matter in production.
 
 This exercise is **open-book**. You may use AI assistants, search, documentation, and any tools you would normally use at work. We are evaluating how you **prioritize, validate, and explain** your work, not whether you can recall syntax from memory.
 
@@ -11,11 +11,12 @@ This exercise is **open-book**. You may use AI assistants, search, documentation
 | Area | Contents |
 |------|----------|
 | **Application** | A minimal static site under `app/` (`index.html`, `healthz.html`). There is no application server or build toolchain beyond what you add. |
-| **Container image** | A **deliberately imperfect** `Dockerfile` and an **incomplete** `.dockerignore`. |
-| **Kubernetes** | Flawed manifests under `kubernetes/` for a web Deployment, Service, Ingress, and a **secondary** CronJob. The web workload is the **primary** focus; the CronJob is optional depth. |
-| **Terraform** | AWS-focused configuration for **ECR** and an **IAM role for GitHub Actions (OIDC)** related to image publishing. It is **not** a full platform and is intentionally incomplete or risky in places. |
-| **CI/CD** | A **flawed or incomplete** GitHub Actions workflow under `.github/workflows/deploy.yaml`. |
+| **Container image** | A starter `Dockerfile` and `.dockerignore` you should review. |
+| **Kubernetes** | Manifests under `kubernetes/` for a web Deployment, Service, Ingress, and a **secondary** CronJob. The web workload is the **primary** focus; the CronJob is optional depth. |
+| **Terraform** | AWS-focused configuration for **ECR** and an **IAM role for GitHub Actions (OIDC)** related to image publishing. It is **not** a full platform. |
+| **CI/CD** | A GitHub Actions workflow under `.github/workflows/deploy.yaml` to review. |
 | **Local validation** | A simple `scripts/validate.sh` (and `make validate`) that runs checks **when tools are available**; it is not exhaustive. |
+| **Handoff notes** | `CANDIDATE_NOTES.md` — **complete this file** before your review session (brief sections are fine). |
 
 ---
 
@@ -35,7 +36,7 @@ Within the time allotted for the Test Drive, make the **safest, highest-value** 
 2. **Kubernetes** — Review and improve the manifests for the **web deployment** first; treat the CronJob as secondary unless you have time.
 3. **Terraform** — Review the ECR and GitHub OIDC IAM pieces from security, operability, and maintainability angles (`terraform fmt`, reasoning about policies, tags, lifecycle, etc.).
 4. **CI/CD** — Review and improve the workflow **or**, if time runs short, document a **better** deployment design (branching, tagging, environments, secrets vs OIDC, rollout/rollback, gates).
-5. **Documentation** — Use `CANDIDATE_NOTES.md` (copy or fill in place) to capture assumptions, tradeoffs, validation, and **how you used AI**.
+5. **Documentation** — Please **fill in `CANDIDATE_NOTES.md` as part of your handoff** (assumptions, tradeoffs, validation, **how you used AI**). It is acceptable for sections to be brief.
 
 You may **not** complete every optional improvement. **Prioritization** is part of the assessment.
 
@@ -81,6 +82,6 @@ When you walk through your work with the team, be prepared to cover:
 4. **What you validated** (commands, dry-runs, reviews) and what remains unverified.
 5. **What is incomplete or still risky** — honesty matters more than pretending it is done.
 6. **How the deployment flow would work** end-to-end in a real org (build → tag → push → deploy → rollback concepts).
-7. **How AI was used and reviewed** — see `CANDIDATE_NOTES.md`.
+7. **How AI was used and reviewed** — required detail lives in `CANDIDATE_NOTES.md`.
 
 Good luck—we are looking forward to how you **think**, not just what files you touch.
