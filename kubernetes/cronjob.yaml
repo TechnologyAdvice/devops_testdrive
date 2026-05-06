@@ -16,4 +16,4 @@ spec:
               command:
                 - /bin/sh
                 - -c
-                - echo maintenance tick
+                - curl -fsS http://static-site/healthz.html

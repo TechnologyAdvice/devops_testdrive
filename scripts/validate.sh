@@ -86,7 +86,9 @@ echo
 
 if have kubeconform; then
   echo "-- kubeconform --"
-  kubeconform -strict -ignore-missing-schemas kubernetes/*.yaml || true
+  kubeconform -strict -ignore-missing-schemas kubernetes/*.yaml || {
+    echo "kubeconform found issues; fix them or document why they remain."
+  }
   echo "kubeconform: finished (schemas may be missing offline)"
 else
   echo "kubeconform: not found; skipping"
