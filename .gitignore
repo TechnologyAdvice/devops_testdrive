@@ -32,3 +32,6 @@ override.tf.json
 
 # Claude Code settings: the local file is per-checkout.
 .claude/settings.local.json
+
+# Claude Code worktrees
+.claude/worktrees/

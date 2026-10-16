@@ -1,1 +1,4 @@
 .git
+
+# Claude Code worktrees
+.claude/worktrees
